@@ -1,11 +1,7 @@
-const request = require("request");
-// const Payment = require("../models/paymentmodel");
-const mtnMomo = require("./mtnMomo");
+const mtnMomo = require("../middleware/mtnMomo");
 const _Momo = mtnMomo(process.env.MTN_BASIC_AUTH);
 const {initializePayment, verifyPayment}=_Momo;
-// const { initializePayment, verifyPayment } = require("../middleware/mtnMomo")(
-//   request
-// );
+
 
 const MakePayment = (req, res) => {
   console.log("======Payment controller=====");

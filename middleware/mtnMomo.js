@@ -44,7 +44,6 @@ const mtnMomo = (MTN_BASIC_AUTH) => {
         "X-Reference-Id": `${form.externalId}`,
         //  "X-Callback-Url":
         // "https://salvagemebackendapi.onrender.com/salvageme/payment/verifyPayment",
-
         "X-Target-Environment": "mtnghana",
         "Ocp-Apim-Subscription-Key": `${process.env.MTN_OCP_COLLECTION_KEY}`,
       },

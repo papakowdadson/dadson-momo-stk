@@ -1,15 +1,15 @@
-// const express = require('express');
-// const paymentRoute = express.Router();
+const express = require('express');
+const paymentRoute = express.Router();
 
-// const { MakePayment,VerifyPayment,CheckPaymentStatus} = require('../controllers/paymentcontroller');
-// const {CreateAccessToken} = require('../middleware/payment');
+const { MakePayment,VerifyPayment,CheckPaymentStatus} = require('../controllers/paymentcontroller');
+const {CreateAccessToken} = require('../middleware/payment');
 
-// paymentRoute.post('/makePayment',CreateAccessToken,MakePayment);
+paymentRoute.post('/makePayment',CreateAccessToken,MakePayment);
 
-// paymentRoute.get('/checkPaymentStatus',CreateAccessToken,CheckPaymentStatus);
+paymentRoute.get('/checkPaymentStatus',CreateAccessToken,CheckPaymentStatus);
 
-// paymentRoute.post('/verifyPayment',CreateAccessToken,VerifyPayment);
+paymentRoute.post('/verifyPayment',CreateAccessToken,VerifyPayment);
 
 
 
-// module.exports = paymentRoute;
+module.exports = paymentRoute;

@@ -15,7 +15,8 @@
     "express",
     "middleware",
     "utilities",
-    "toolkit"
+    "toolkit",
+    "Mobile Money"
   ],
   "author": "DadsonPapaKow",
   "license": "ISC",
