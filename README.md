@@ -21,7 +21,7 @@ To install this toolkit, you can use npm:
 ```sh
 npm install @papakowdadson/dadson-momo-stk
 
-USAGE
+## USAGE
 Here’s an example of how to use the toolkit in an Express application-MVC:
 
 - Create a .env file with the PORT value
@@ -65,7 +65,7 @@ app.listen(port, () => {
 
 
 
-Middleware
+## Middleware
 createAccessToken
 Generates access token for each request from `MTN_BASIC_AUTH`. Call this method to generate access token before making any request.It accepts a callback function.
 
@@ -181,10 +181,10 @@ const VerifyPayment = (req, res) => {
 
 
 
-Utilities
+## Utilities
 // No utilities used yet
 
-Routes
+## Routes
 Predefined routes, to be documented here.
 
 Example Route
@@ -193,13 +193,13 @@ Usage
 
 
 
-License
+## License
 This project is licensed under the MIT License - see the LICENSE file for details.
 
-Contributing
+## Contributing
 If you would like to contribute to this project, please fork the repository and submit a pull request. We appreciate your contributions!
 
-Issues
+## Issues
 If you encounter any issues or have suggestions for improvements, please open an issue in the  <a href='https://github.com/papakowdadson/dadson-momo-stk/issues'>GitHub Repository</a>.
 
 
