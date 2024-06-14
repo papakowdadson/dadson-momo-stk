@@ -1,5 +1,5 @@
 const mtnMomo = require("./mtnMomo");
-const _Momo = mtnMomo(process.env.MTN_BASIC_AUTH);
+const _Momo = mtnMomo(process.env.MTN_BASIC_AUTH,process.env.MTN_OCP_COLLECTION_KEY);
 const { createAccessToken } = _Momo;
 
 const CreateAccessToken = (req, res, next) => {

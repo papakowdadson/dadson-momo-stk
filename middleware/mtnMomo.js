@@ -1,22 +1,28 @@
 const request = require("request");
 const axios = require("axios");
-const mtnMomo = (MTN_BASIC_AUTH) => {
-  const MySecretKey = `Basic ${process.env.MTN_BASIC_AUTH}`;
-  console.log("===mysecret===", MySecretKey);
-  console.log("Base url", process.env.MTN_BASE_URL);
+const mtnMomo = (MTN_BASIC_AUTH,MTN_OCP_COLLECTION_KEY) => {
+  const MyBasicAuth = `Basic ${MTN_BASIC_AUTH}`;
+  const OCPCollectionKey = MTN_OCP_COLLECTION_KEY;
+  const MTN_BASE_URL = 'https://proxy.momoapi.mtn.com';
+  console.log("===mysecret===", MyBasicAuth);
+  console.log("===OCPCollectionKey===", OCPCollectionKey);
+
+  console.log("Base url", MTN_BASE_URL);
   //sk_test_xxxx to be replaced by your own secret key
 
   const createAccessToken = (mycallback) => {
     console.log("=======MTNMomo module createAcessToken=====");
     const option = {
-      url: `${process.env.MTN_BASE_URL}/collection/token/`,
+      url: `${MTN_BASE_URL}/collection/token/`,
       headers: {
-        Authorization: MySecretKey,
-        "Ocp-Apim-Subscription-Key": `${process.env.MTN_OCP_COLLECTION_KEY}`,
+        Authorization: MyBasicAuth,
+        "Ocp-Apim-Subscription-Key": OCPCollectionKey,
       },
     };
     const callback = (error, response, body) => {
       console.log("=======MTNMomo module createAcessToken res body=====", body);
+      console.log("=======MTNMomo module createAcessToken res error=====", error);
+
       // const _body = JSON.parse(body);
       return mycallback(error, body);
     };
@@ -37,7 +43,7 @@ const mtnMomo = (MTN_BASIC_AUTH) => {
     };
     console.log("=====Middleware, initializing Payment====");
 
-    const url = `${process.env.MTN_BASE_URL}/collection/v1_0/requesttopay`;
+    const url = `${MTN_BASE_URL}/collection/v1_0/requesttopay`;
     const option = {
       headers: {
         Authorization: `Bearer ${form.access_token}`,
@@ -45,7 +51,7 @@ const mtnMomo = (MTN_BASIC_AUTH) => {
         //  "X-Callback-Url":
         // "https://salvagemebackendapi.onrender.com/salvageme/payment/verifyPayment",
         "X-Target-Environment": "mtnghana",
-        "Ocp-Apim-Subscription-Key": `${process.env.MTN_OCP_COLLECTION_KEY}`,
+        "Ocp-Apim-Subscription-Key": OCPCollectionKey,
       },
     };
     const callback = (error, body) => {
@@ -74,11 +80,11 @@ const mtnMomo = (MTN_BASIC_AUTH) => {
 
   const verifyPayment = (form, mycallback) => {
     const option = {
-      url: `${process.env.MTN_BASE_URL}/collection/v1_0/requesttopay/${form.ref}`,
+      url: `${MTN_BASE_URL}/collection/v1_0/requesttopay/${form.ref}`,
       headers: {
         Authorization: `Bearer ${form.access_token}`,
         "X-Target-Environment": "mtnghana",
-        "Ocp-Apim-Subscription-Key": `${process.env.MTN_OCP_COLLECTION_KEY}`,
+        "Ocp-Apim-Subscription-Key": OCPCollectionKey,
       },
     };
     const callback = (error, response, body) => {

@@ -1,5 +1,5 @@
 const mtnMomo = require("../middleware/mtnMomo");
-const _Momo = mtnMomo(process.env.MTN_BASIC_AUTH);
+const _Momo = mtnMomo(process.env.MTN_BASIC_AUTH,process.env.MTN_OCP_COLLECTION_KEY);
 const {initializePayment, verifyPayment}=_Momo;
 
 
