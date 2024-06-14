@@ -20,22 +20,23 @@ To install this toolkit, you can use npm:
 
 ```sh
 npm install @papakowdadson/dadson-momo-stk
+```
 
 ## USAGE
 Here’s an example of how to use the toolkit in an Express application-MVC:
 
 - Create a .env file with the PORT value
 //Sample .env
-`
+```sh
 PORT=5000
 MTN_BASE_URL_SANDBOX=https://sandbox.momodeveloper.mtn.com // Textbed URL
 MTN_BASIC_AUTH=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 MTN_BASE_URL=https://proxy.momoapi.mtn.com // Production url
 MTN_OCP_COLLECTION_KEY=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-`
+```
 
 - Create index.js file
-`
+```sh
 //Sample index.js
 const express = require("express");
 const cors = require("cors");
@@ -58,7 +59,7 @@ app.use("/@your url/payment", paymentRoute);//sample route, change to any route 
 app.listen(port, () => {
   console.log(`server is running on ${port}`);
 });
-`
+```
 
 - Create Route file
 - Create Controller file
@@ -71,7 +72,7 @@ Generates access token for each request from `MTN_BASIC_AUTH`. Call this method 
 
 Usage
 Example
-`
+```sh
 const mtnMomo = require('papakowdadson/dadson-momo-stk');
 const _Momo = mtnMomo(process.env.MTN_BASIC_AUTH,process.env.MTN_OCP_COLLECTION_KEY);
 const { createAccessToken } = _Momo;
@@ -93,7 +94,7 @@ const GenerateAccessToken = (req, res, next) => {
   });
 };
 module.exports = { GenerateAccessToken };
-`
+```
 
 
 Middleware
@@ -101,14 +102,14 @@ initializePayment
 Initiates a request to pay to clients MSISDN.It accepts a form and a callback
 
 Usage
-`
+```sh
 const mtnMomo = = require('papakowdadson/dadson-momo-stk');
 const _Momo = mtnMomo(process.env.MTN_BASIC_AUTH,process.env.MTN_OCP_COLLECTION_KEY);
 const {initializePayment}=_Momo;
-`
+```
 
 Example
-`
+```sh
 const MakePayment = (req, res) => {
   const form = {
     amount: req.body.amount,
@@ -131,7 +132,7 @@ const MakePayment = (req, res) => {
     }
   });
 };
-`
+```
 
 
 Middleware
@@ -139,14 +140,14 @@ verifyPayment
 Checks the status of transaction. It accepts form an a callback
 
 Usage
-`
+```sh
 const mtnMomo = = require('papakowdadson/dadson-momo-stk');
 const _Momo = mtnMomo(process.env.MTN_BASIC_AUTH,process.env.MTN_OCP_COLLECTION_KEY);
 const {verifyPayment}=_Momo;
-`
+```
 
 Example
-`
+```sh
 const VerifyPayment = (req, res) => {
   const form = {
     ref: req.body.externalId,
@@ -175,7 +176,7 @@ const VerifyPayment = (req, res) => {
     }
   });
 };
-`
+```
 
 
 
@@ -200,7 +201,8 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 If you would like to contribute to this project, please fork the repository and submit a pull request. We appreciate your contributions!
 
 ## Issues
-If you encounter any issues or have suggestions for improvements, please open an issue in the  <a href='https://github.com/papakowdadson/dadson-momo-stk/issues'>GitHub Repository</a>.
+If you encounter any issues or have suggestions for improvements, please open an issue in the  ```sh<a href='https://github.com/papakowdadson/dadson-momo-stk/issues'>GitHub Repository</a>
+``` 
 
 
 
