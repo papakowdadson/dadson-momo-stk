@@ -201,11 +201,4 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 If you would like to contribute to this project, please fork the repository and submit a pull request. We appreciate your contributions!
 
 ## Issues
-If you encounter any issues or have suggestions for improvements, please open an issue in the  ```sh<a href='https://github.com/papakowdadson/dadson-momo-stk/issues'>GitHub Repository</a>
-``` 
-
-
-
-
-
-
+If you encounter any issues or have suggestions for improvements, please open an issue in the <a href='https://github.com/papakowdadson/dadson-momo-stk/issues'>GitHub Repository</a>
