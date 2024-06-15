@@ -1,10 +1,11 @@
+const {logger}=require("../utils/logger")
 const mtnMomo = require("../middleware/mtnMomo");
 const _Momo = mtnMomo(process.env.MTN_BASIC_AUTH,process.env.MTN_OCP_COLLECTION_KEY);
 const {initializePayment, verifyPayment}=_Momo;
 
 
 const MakePayment = (req, res) => {
-  console.log("======Payment controller=====");
+  logger("dadson-momo-stk-internal-api-request-to-pay-controller","......");
   const form = {
     amount: req.body.amount,
     currency: "GHS",
@@ -20,31 +21,26 @@ const MakePayment = (req, res) => {
 
   initializePayment(form, (error, body) => {
     if (error) {
-      //handle errors
-      // console.log("===Request to Pay controller error==",error.response)
       res.status(500).json({ error: error });
-      // throw error;
     } else {
-      console.log("Payment Initialized", body);
       res.status(200).json(body);
     }
   });
 };
 
 const VerifyPayment = (req, res) => {
+  logger("dadson-momo-stk-internal-api-request-to-pay-verify-payment-controller","......");
+
   const form = {
     ref: req.body.externalId,
     access_token: req.body.access_token,
   };
   verifyPayment(form, (error, body) => {
-    // console.log("======verifycontroller==========",JSON.parse(body));
     if (error) {
       //handle errors appropriately
-      console.log("======verifycontroller error==========", error);
        res.status(500).json(error);
     } else {
       const _body = JSON.parse(body);
-      console.log("======verifycontroller response success==========");
       if (_body.status == "SUCCESSFUL") {
         const data = {
           amount: _body.amount,
@@ -53,21 +49,18 @@ const VerifyPayment = (req, res) => {
           paymentRef: _body.externalId,
           paymentStatus: _body.status,
         };
-        console.log("======verifycontroller Req to Pay success==========", _body);
 
         res.status(200).json(data);
        
       } else {
-        console.log("=====verifycontroller Req to Pay failed=======",_body)
         res.status(400).json(_body);
       }
-      // response = JSON.parse(body);
     }
   });
 };
 
 const CheckPaymentStatus = (req, res) => {
-  console.log("Yet to be implemented");
+  logger("dadson-momo-stk-internal-api-request-to-pay-check-payment-status-controller","Yet to be implemented.........");
 };
 
 module.exports = { MakePayment, VerifyPayment, CheckPaymentStatus };
