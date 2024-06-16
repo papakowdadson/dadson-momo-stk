@@ -1,6 +1,6 @@
 {
   "name": "dadson-momo-stk",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Collection STK for MTN momo Ghana",
   "main": "index.js",
   "scripts": {
@@ -16,6 +16,7 @@
     "middleware",
     "utilities",
     "toolkit",
+    "Momo",
     "Mobile Money"
   ],
   "author": "DadsonPapaKow",

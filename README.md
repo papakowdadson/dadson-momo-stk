@@ -11,6 +11,7 @@ A simple Mobile money toolkit with reusable middleware and utilities for Express
   - [initializePayment](#initializePayment)
   - [verifyPayment](#verifyPayment)
 - [Utilities](#utilities)
+  - [logger](#logger)
 - [Routes](#routes)
 - [License](#license)
 
@@ -73,7 +74,7 @@ Generates access token for each request from `MTN_BASIC_AUTH`. Call this method 
 Usage
 Example
 ```sh
-const mtnMomo = require('papakowdadson/dadson-momo-stk');
+const mtnMomo = require('dadson-momo-stk');
 const _Momo = mtnMomo(process.env.MTN_BASIC_AUTH,process.env.MTN_OCP_COLLECTION_KEY);
 const { createAccessToken } = _Momo;
 
@@ -103,7 +104,7 @@ Initiates a request to pay to clients MSISDN.It accepts a form and a callback
 
 Usage
 ```sh
-const mtnMomo = = require('papakowdadson/dadson-momo-stk');
+const mtnMomo = = require('dadson-momo-stk');
 const _Momo = mtnMomo(process.env.MTN_BASIC_AUTH,process.env.MTN_OCP_COLLECTION_KEY);
 const {initializePayment}=_Momo;
 ```
@@ -141,7 +142,7 @@ Checks the status of transaction. It accepts form an a callback
 
 Usage
 ```sh
-const mtnMomo = = require('papakowdadson/dadson-momo-stk');
+const mtnMomo = = require('dadson-momo-stk');
 const _Momo = mtnMomo(process.env.MTN_BASIC_AUTH,process.env.MTN_OCP_COLLECTION_KEY);
 const {verifyPayment}=_Momo;
 ```
@@ -183,7 +184,11 @@ const VerifyPayment = (req, res) => {
 
 
 ## Utilities
-// No utilities used yet
+Logger
+logs responses and errors
+
+Usage
+logger('@your title','@your error/response messsage')
 
 ## Routes
 Predefined routes, to be documented here.
