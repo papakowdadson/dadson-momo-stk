@@ -1,4 +1,3 @@
-const mtnMomo = require("./middleware/mtnMomo");
 const express = require("express");
 const cors = require("cors");
 const app = express();
@@ -6,7 +5,7 @@ const { urlencoded } = require("express");
 const dotenv = require("dotenv");
 dotenv.config();
 
-const port = 49153;
+const port = 3000;
 
 const paymentRoute = require("./routes/paymentroute");
 
@@ -21,4 +20,3 @@ app.listen(port, () => {
   console.log(`dadsonmomostk server is running on ${port}`);
 });
 
-module.exports = mtnMomo;

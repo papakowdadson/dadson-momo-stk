@@ -1,10 +1,12 @@
 const {logger}=require("../utils/logger")
-const mtnMomo = require("../middleware/mtnMomo");
-const _Momo = mtnMomo(process.env.MTN_BASIC_AUTH,process.env.MTN_OCP_COLLECTION_KEY);
-const {initializePayment, verifyPayment}=_Momo;
+const mtnMomo = require("dadson-momo-stk");
+const _Momo = new mtnMomo({
+  basicAuth: process.env.MTN_BASIC_AUTH,
+  collectionKey: process.env.MTN_OCP_COLLECTION_KEY,
+});
 
 
-const MakePayment = (req, res) => {
+const MakePayment = async (req, res) => {
   logger("dadson-momo-stk-internal-api-request-to-pay-controller","......");
   const form = {
     amount: req.body.amount,
@@ -19,27 +21,28 @@ const MakePayment = (req, res) => {
     access_token: req.body.access_token,
   };
 
-  initializePayment(form, (error, body) => {
-    if (error) {
+  const paymentResponse = await _Momo.initializePayment(form);
+  logger("paymentResponse",paymentResponse);
+  if (!paymentResponse) {
       res.status(500).json({ error: error });
-    } else {
+  } else {
       res.status(200).json(body);
-    }
-  });
+  }
 };
 
-const VerifyPayment = (req, res) => {
+const VerifyPayment = async (req, res) => {
   logger("dadson-momo-stk-internal-api-request-to-pay-verify-payment-controller","......");
 
   const form = {
     ref: req.body.externalId,
     access_token: req.body.access_token,
   };
-  verifyPayment(form, (error, body) => {
-    if (error) {
+  const verifyResponse = await _Momo.verifyPayment(form);
+  logger("verifyResponse",verifyResponse);
+  if (!verifyResponse) {
       //handle errors appropriately
        res.status(500).json(error);
-    } else {
+  } else {
       const _body = JSON.parse(body);
       if (_body.status == "SUCCESSFUL") {
         const data = {
@@ -56,11 +59,7 @@ const VerifyPayment = (req, res) => {
         res.status(400).json(_body);
       }
     }
-  });
 };
 
-const CheckPaymentStatus = (req, res) => {
-  logger("dadson-momo-stk-internal-api-request-to-pay-check-payment-status-controller","Yet to be implemented.........");
-};
 
-module.exports = { MakePayment, VerifyPayment, CheckPaymentStatus };
+module.exports = { MakePayment, VerifyPayment };
