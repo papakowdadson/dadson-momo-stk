@@ -8,202 +8,110 @@ A simple Mobile money toolkit with reusable middleware and utilities for Express
 - [Usage](#usage)
 - [Middleware](#middleware)
   - [createAccessToken](#createAccessToken)
-  - [initializePayment](#initializePayment)
-  - [verifyPayment](#verifyPayment)
-- [Utilities](#utilities)
-  - [logger](#logger)
-- [Routes](#routes)
-- [License](#license)
+  # dadson-momo-stk
 
-## Installation
+  An Express application for making and verifying MTN Mobile Money collection payments in the sandbox environment.
 
-To install this toolkit, you can use npm:
+  ## Requirements
 
-```sh
-npm install @papakowdadson/dadson-momo-stk
-```
+  - Node.js
+  - MTN MoMo sandbox credentials
+  - dadson-momo-stk
 
-## USAGE
-Here’s an example of how to use the toolkit in an Express application-MVC:
+  ## Installation
 
-- Create a .env file with the PORT value
-//Sample .env
-```sh
-PORT=5000
-MTN_BASE_URL_SANDBOX=https://sandbox.momodeveloper.mtn.com // Textbed URL
-MTN_BASIC_AUTH=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-MTN_BASE_URL=https://proxy.momoapi.mtn.com // Production url
-MTN_OCP_COLLECTION_KEY=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-```
+  ```sh
+  npm install
+  ```
 
-- Create index.js file
-```sh
-//Sample index.js
-const express = require("express");
-const cors = require("cors");
-const app = express();
-const { urlencoded } = require("express");
-const dotenv = require("dotenv");
-dotenv.config();
+  ## Configuration
 
-const port = process.env.PORT;
+  Create a `.env` file in the project root:
 
-const paymentRoute = require("./routes/paymentroute");
+  ```dotenv
+  SANDBOX_BASIC_AUTH=your_mtn_basic_auth
+  SANDBOX_OCP_COLLECTION_KEY=your_mtn_collection_key
+  ```
 
-app.use(cors());
-app.options("*", cors());
-app.use(express.json());
-app.use(urlencoded({ extended: true }));
+  The application uses the MTN sandbox API at `https://sandbox.momodeveloper.mtn.com` and the `sandbox` target environment. Do not commit credentials to source control.
 
-app.use("/@your url/payment", paymentRoute);//sample route, change to any route of your choice
+  ## Running the server
 
-app.listen(port, () => {
-  console.log(`server is running on ${port}`);
-});
-```
+  ```sh
+  npm start
+  ```
 
-- Create Route file
-- Create Controller file
+  For development with automatic restart:
 
+  ```sh
+  npm run dev
+  ```
 
+  The server listens on port `3000` and mounts the payment routes at:
 
-## Middleware
-createAccessToken
-Generates access token for each request from `MTN_BASIC_AUTH`. Call this method to generate access token before making any request.It accepts a callback function.
+  ```text
+  /dadsonmomostk/payment
+  ```
 
-Usage
-Example
-```sh
-const mtnMomo = require('dadson-momo-stk');
-const _Momo = mtnMomo(process.env.MTN_BASIC_AUTH,process.env.MTN_OCP_COLLECTION_KEY);
-const { createAccessToken } = _Momo;
+  Each request automatically obtains an MTN access token before the payment controller runs. The token is kept in `req.body.access_token` and does not need to be supplied by the client.
 
-const GenerateAccessToken = (req, res, next) => {
-  console.log("====creating access token====");
-  createAccessToken((error, body) => {
-    if (body) {
-      const _body = JSON.parse(body);
-      if (_body.access_token) {
-        req.body.access_token = _body.access_token;
-        next();
-      } else {
-        res.status(400).json({ error: "No token in body" });
-      }
-    } else {
-      res.status(500).json({ error: "couldn't create access token" });
-    }
-  });
-};
-module.exports = { GenerateAccessToken };
-```
+  ## API
 
+  ### Make a payment
 
-Middleware
-initializePayment
-Initiates a request to pay to clients MSISDN.It accepts a form and a callback
+  `POST /dadsonmomostk/payment/makePayment`
 
-Usage
-```sh
-const mtnMomo = = require('dadson-momo-stk');
-const _Momo = mtnMomo(process.env.MTN_BASIC_AUTH,process.env.MTN_OCP_COLLECTION_KEY);
-const {initializePayment}=_Momo;
-```
+  Request body:
 
-Example
-```sh
-const MakePayment = (req, res) => {
-  const form = {
-    amount: req.body.amount,
-    currency: "GHS",
-    externalId: req.body.XReferenceId,
-    payer: {
-      partyIdType: "MSISDN",
-      partyId: req.body.payer.partyId,
+  ```json
+  {
+    "amount": "10",
+    "currency": "GHS",
+    "XReferenceId": "your-reference-id",
+    "payer": {
+      "partyIdType": "MSISDN",
+      "partyId": "233XXXXXXXXX"
     },
-    payerMessage:req.body.payerMessage,
-    payeeNote: req.body.payeeNote,
-    access_token: req.body.access_token,
-  }; 
+    "payerMessage": "Payment for order 123",
+    "payeeNote": "Order 123"
+  }
+  ```
 
-  initializePayment(form, (error, body) => {
-    if (error) {
-      res.status(500).json({ error: error });
-    } else {
-      res.status(200).json(body);
-    }
+  The response is the object returned by MTN after the request-to-pay call. Payment errors return HTTP `500` with an `error` message.
+
+  ### Verify a payment
+
+  `POST /dadsonmomostk/payment/verifyPayment`
+
+  Request body:
+
+  ```json
+  {
+    "externalId": "your-reference-id"
+  }
+  ```
+
+  The response is the object returned by MTN for the payment-status request. Verification errors return HTTP `500` with an `error` message.
+
+  ## Implementation notes
+
+  The application uses the `dadson-momo-stk` client with this configuration:
+
+  ```js
+  const _Momo = new mtnMomo({
+    basicAuth: process.env.SANDBOX_BASIC_AUTH,
+    collectionKey: process.env.SANDBOX_OCP_COLLECTION_KEY,
+    baseUrl: "https://sandbox.momodeveloper.mtn.com",
+    targetEnvironment: "sandbox"
   });
-};
-```
+  ```
 
+  The access-token middleware and payment controller use async/await. The client methods return response objects, so responses should not be passed through `JSON.parse()`.
 
-Middleware
-verifyPayment
-Checks the status of transaction. It accepts form an a callback
+  ## License
 
-Usage
-```sh
-const mtnMomo = = require('dadson-momo-stk');
-const _Momo = mtnMomo(process.env.MTN_BASIC_AUTH,process.env.MTN_OCP_COLLECTION_KEY);
-const {verifyPayment}=_Momo;
-```
+  ISC. See `package.json` for the project license metadata.
 
-Example
-```sh
-const VerifyPayment = (req, res) => {
-  const form = {
-    ref: req.body.externalId,
-    access_token: req.body.access_token,
-  };
-  verifyPayment(form, (error, body) => {
-    if (error) {
-    //handle errors appropriately
-       res.status(500).json(error);
-    } else {
-      const _body = JSON.parse(body);
-      if (_body.status == "SUCCESSFUL") {
-        const data = {
-          amount: _body.amount,
-          MSISDN: _body.payer.partyId,
-          message: _body.payeeNote,
-          paymentRef: _body.externalId,
-          paymentStatus: _body.status,
-        };
-        res.status(200).json(data);
-      } else {
-        // Req to Pay failed
-        res.status(400).json(_body);
-      }
-      // response = JSON.parse(body);
-    }
-  });
-};
-```
+  ## Issues
 
-
-
-
-
-## Utilities
-Logger
-logs responses and errors
-
-Usage
-logger('@your title','@your error/response messsage')
-
-## Routes
-Predefined routes, to be documented here.
-
-Example Route
-
-Usage
-
-
-
-## License
-This project is licensed under the MIT License - see the LICENSE file for details.
-
-## Contributing
-If you would like to contribute to this project, please fork the repository and submit a pull request. We appreciate your contributions!
-
-## Issues
-If you encounter any issues or have suggestions for improvements, please open an issue in the <a href='https://github.com/papakowdadson/dadson-momo-stk/issues'>GitHub Repository</a>
+  For issues or suggestions, open an issue in the [GitHub repository](https://github.com/papakowdadson/dadson-momo-stk/issues).
