@@ -14,8 +14,30 @@ The SDK does not start a server or require Express. Create a client with the
 MTN credentials from the Developer Portal:
 
 ### Initialization
-`basicAuth` may be either the raw base64 credential or a complete `Basic ...`
-authorization value. 
+`basicAuth` is the raw base64 credential authorization value.
+
+`basicAuth = base64Encoded(API_USER:API_KEY)`
+
+On macOS or Linux, encode the API user and API key as a single
+`API_USER:API_KEY` value:
+
+```sh
+echo -n "YOUR_API_USER:YOUR_API_KEY" | base64
+```
+
+You can then place the generated value in `.env`:
+
+```dotenv
+MTN_BASIC_AUTH=your-base64-encoded-value
+MTN_OCP_COLLECTION_KEY=your-collection-key
+```
+
+Do not add the `Basic ` prefix when using the raw base64 value above. 
+
+#### Security 
+Keep
+`.env` out of source control because it contains credentials.
+
 The production Ghana API is used by default. 
 
 ```js
@@ -49,6 +71,8 @@ const { access_token: accessToken } = await momo.createAccessToken();
 Starts a request-to-pay transaction and returns `{ statusCode, statusText }`.
 The request requires `amount`, `externalId`, `payer.partyId`, and
 `accessToken`. `currency` defaults to `GHS`.
+
+_Note: Sandbox Environment only support `EUR` as currency_
 
 ```js
 async function collectPayment() {
